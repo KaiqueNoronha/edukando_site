@@ -1,0 +1,156 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Edukando — site estático (S3 + CloudFront)
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: ''
+    Description: Domínio customizado (ex. edukando.com.br). Vazio = só URL CloudFront.
+  WwwDomainName:
+    Type: String
+    Default: ''
+    Description: Opcional www (ex. www.edukando.com.br).
+
+Conditions:
+  HasDomain: !Not [!Equals [!Ref DomainName, '']]
+  HasWww: !And
+    - !Not [!Equals [!Ref DomainName, '']]
+    - !Not [!Equals [!Ref WwwDomainName, '']]
+
+Resources:
+  SiteBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  OriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub '${AWS::StackName}-oac'
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipal
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub '${SiteBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:aws:cloudfront::${AWS::AccountId}:distribution/${SiteDistribution}'
+
+  SiteCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Condition: HasDomain
+    Properties:
+      DomainName: !Ref DomainName
+      SubjectAlternativeNames: !If
+        - HasWww
+        - [!Ref WwwDomainName]
+        - !Ref AWS::NoValue
+      ValidationMethod: DNS
+      Tags:
+        - Key: Project
+          Value: edukando-site
+
+  UrlRewriteFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${AWS::StackName}-url-rewrite'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Append index.html for Next.js static export paths
+        Runtime: cloudfront-js-2.0
+      FunctionCode: |
+        function handler(event) {
+          var request = event.request;
+          var uri = request.uri;
+          if (uri.endsWith('/')) {
+            request.uri = uri + 'index.html';
+          } else if (!uri.includes('.')) {
+            request.uri = uri + '/index.html';
+          }
+          return request;
+        }
+
+  SiteDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        PriceClass: PriceClass_100
+        Aliases: !If
+          - HasWww
+          - [!Ref DomainName, !Ref WwwDomainName]
+          - !If
+            - HasDomain
+            - [!Ref DomainName]
+            - !Ref AWS::NoValue
+        ViewerCertificate: !If
+          - HasDomain
+          - AcmCertificateArn: !Ref SiteCertificate
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2021
+          - CloudFrontDefaultCertificate: true
+        DefaultCacheBehavior:
+          TargetOriginId: SiteOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt UrlRewriteFunction.FunctionMetadata.FunctionARN
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 0
+        Origins:
+          - Id: SiteOrigin
+            DomainName: !GetAtt SiteBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+            OriginAccessControlId: !GetAtt OriginAccessControl.Id
+
+Outputs:
+  BucketName:
+    Value: !Ref SiteBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-BucketName'
+  DistributionId:
+    Value: !Ref SiteDistribution
+    Export:
+      Name: !Sub '${AWS::StackName}-DistributionId'
+  CloudFrontDomain:
+    Value: !GetAtt SiteDistribution.DomainName
+  CloudFrontUrl:
+    Value: !Sub 'https://${SiteDistribution.DomainName}'
+  CertificateArn:
+    Condition: HasDomain
+    Value: !Ref SiteCertificate
