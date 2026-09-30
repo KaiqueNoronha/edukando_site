@@ -52,10 +52,10 @@ function Tag({ label, color = C.blue }: { label: string; color?: string }) {
 
 function SectionTitle({ tag, title, sub, center = false }: { tag?: string; title: string; sub?: string; center?: boolean }) {
   return (
-    <div style={{ maxWidth: 680, margin: center ? '0 auto' : undefined, textAlign: center ? 'center' : undefined, marginBottom: 56 }}>
+    <div className="section-title" style={{ maxWidth: 680, margin: center ? '0 auto' : undefined, textAlign: center ? 'center' : undefined, marginBottom: 56 }}>
       {tag && <div style={{ marginBottom: 14 }}><Tag label={tag} /></div>}
       <h2 style={{ fontFamily: 'Outfit, sans-serif', fontWeight: 800, fontSize: 'clamp(28px, 3vw, 44px)', color: C.dark, margin: '0 0 16px', lineHeight: 1.15 }} dangerouslySetInnerHTML={{ __html: title }} />
-      {sub && <p style={{ fontFamily: 'Inter, sans-serif', fontSize: 17, color: C.textSec, margin: 0, lineHeight: 1.7 }}>{sub}</p>}
+      {sub && <p className="section-sub" style={{ fontFamily: 'Inter, sans-serif', fontSize: 17, color: C.textSec, margin: 0, lineHeight: 1.7 }}>{sub}</p>}
     </div>
   );
 }
@@ -70,7 +70,7 @@ function DashboardMockup() {
         <div style={{ flex: 1, margin: '0 12px', height: 22, background: '#e8ecf2', borderRadius: 6 }} />
       </div>
       {/* Dashboard content */}
-      <div style={{ display: 'flex', height: 320 }}>
+      <div className="dash-body" style={{ display: 'flex', height: 320 }}>
         {/* Sidebar */}
         <div style={{ width: 52, background: C.dark, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '16px 0', gap: 16 }}>
           {[C.blue,'#ffffff30','#ffffff30','#ffffff30','#ffffff30'].map((c,i) => (
@@ -79,7 +79,7 @@ function DashboardMockup() {
         </div>
         {/* Main */}
         <div style={{ flex: 1, padding: 16, background: '#f8faff', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', gap: 10 }}>
+          <div className="dash-kpis" style={{ display: 'flex', gap: 10 }}>
             {[['Alunos ativos','1.248',C.blue],['Frequência','94%','#16a34a'],['Inadimplência','4,2%','#f59e0b'],['Mensalidades','R$ 82k',C.blue]].map(([l,v,c]) => (
               <div key={l as string} style={{ flex: 1, background: 'white', borderRadius: 10, padding: '10px 12px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                 <p style={{ fontFamily: 'Inter', fontSize: 9, color: '#939393', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: 0.5 }}>{l}</p>
@@ -87,9 +87,9 @@ function DashboardMockup() {
               </div>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: 10, flex: 1 }}>
+          <div className="dash-row" style={{ display: 'flex', gap: 10, flex: 1 }}>
             {/* Chart */}
-            <div style={{ flex: 2, background: 'white', borderRadius: 10, padding: 12, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+            <div className="dash-chart" style={{ flex: 2, background: 'white', borderRadius: 10, padding: 12, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
               <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: 11, color: C.dark, margin: '0 0 10px' }}>Frequência mensal</p>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 80 }}>
                 {[65,80,70,90,85,92,88,95,82,90,87,94].map((h,i) => (
@@ -176,6 +176,22 @@ const CAROUSEL_SLIDES = [
   },
 ];
 
+const NAV_ITEMS = ['Plataforma','Soluções','Recursos','Para escolas','Para famílias','FAQ'];
+const navHref = (item: string) => `#${item.toLowerCase().replace(/\s/g,'-')}`;
+
+const ECO_MODULES = [
+  { label: 'Gestão',       icon: '🏫' },
+  { label: 'Financeiro',   icon: '💳' },
+  { label: 'CRM',          icon: '🤝' },
+  { label: 'Agenda',       icon: '📅' },
+  { label: 'Comunicação',  icon: '💬' },
+  { label: 'IA Edu',       icon: '🤖' },
+  { label: 'Frequência',   icon: '✅' },
+  { label: 'Acadêmico',    icon: '📊' },
+  { label: 'APP',          icon: '📱' },
+  { label: 'Relacionamento', icon: '👥' },
+];
+
 // ── Main component ─────────────────────────────────────────────────────────────
 export default function Site() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -248,21 +264,43 @@ export default function Site() {
       {/* ── HEADER ───────────────────────────────────────────────────────────── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', borderBottom: '1px solid #edf0f7', padding: '0 max(24px, 4vw)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', height: 70, gap: 32 }}>
-          <img src={logo} alt="Edukando" style={{ height: 48, objectFit: 'contain' }} />
+          <img className="site-logo" src={logo} alt="Edukando" style={{ height: 48, objectFit: 'contain' }} />
           <nav style={{ display: 'flex', gap: 28, flex: 1, justifyContent: 'center' }} className="site-nav">
-            {['Plataforma','Soluções','Recursos','Para escolas','Para famílias','FAQ'].map(item => (
-              <a key={item} href={`#${item.toLowerCase().replace(/\s/g,'-')}`} style={{ fontFamily: 'Outfit', fontWeight: 500, fontSize: 15, color: C.textSec, textDecoration: 'none', transition: 'color 0.15s' }}
+            {NAV_ITEMS.map(item => (
+              <a key={item} href={navHref(item)} style={{ fontFamily: 'Outfit', fontWeight: 500, fontSize: 15, color: C.textSec, textDecoration: 'none', transition: 'color 0.15s' }}
                 onMouseEnter={e => (e.currentTarget.style.color = C.blue)}
                 onMouseLeave={e => (e.currentTarget.style.color = C.textSec)}>
                 {item}
               </a>
             ))}
           </nav>
-          <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+          <div className="site-header-actions" style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
             <button style={{ padding: '9px 20px', borderRadius: 10, border: `1.5px solid #e8ecf2`, background: 'white', fontFamily: 'Outfit', fontWeight: 600, fontSize: 14, color: C.dark, cursor: 'pointer' }}>Entrar</button>
             <button style={{ padding: '9px 20px', borderRadius: 10, border: 'none', background: C.blue, fontFamily: 'Outfit', fontWeight: 700, fontSize: 14, color: 'white', cursor: 'pointer', boxShadow: '0 4px 14px rgba(22,119,255,0.3)' }}>Falar com especialista</button>
           </div>
+          <button className="site-menu-btn" onClick={() => setMenuOpen(o => !o)} aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen}
+            style={{ display: 'none', marginLeft: 'auto', width: 42, height: 42, borderRadius: 10, border: '1.5px solid #e8ecf2', background: 'white', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, padding: 0 }}>
+            {menuOpen ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.dark} strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.dark} strokeWidth="2.2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            )}
+          </button>
         </div>
+        {menuOpen && (
+          <div className="site-mobile-menu" style={{ maxWidth: 1200, margin: '0 auto', padding: '4px 0 20px', display: 'flex', flexDirection: 'column' }}>
+            {NAV_ITEMS.map(item => (
+              <a key={item} href={navHref(item)} onClick={() => setMenuOpen(false)}
+                style={{ padding: '13px 2px', fontFamily: 'Outfit', fontWeight: 600, fontSize: 16, color: C.dark, textDecoration: 'none', borderBottom: '1px solid #f0f3f8' }}>
+                {item}
+              </a>
+            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 18 }}>
+              <button style={{ padding: '13px 20px', borderRadius: 12, border: `1.5px solid #e8ecf2`, background: 'white', fontFamily: 'Outfit', fontWeight: 600, fontSize: 15, color: C.dark, cursor: 'pointer' }}>Entrar</button>
+              <button style={{ padding: '13px 20px', borderRadius: 12, border: 'none', background: C.blue, fontFamily: 'Outfit', fontWeight: 700, fontSize: 15, color: 'white', cursor: 'pointer', boxShadow: '0 4px 14px rgba(22,119,255,0.3)' }}>Falar com especialista</button>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
@@ -272,7 +310,7 @@ export default function Site() {
           <div key={slide.label} style={{ position: 'absolute', inset: 0, backgroundImage: `url(${slide.url})`, backgroundSize: 'cover', backgroundPosition: 'center', opacity: i === heroSlide ? 1 : 0, transition: 'opacity 1.2s ease-in-out', zIndex: 0 }} />
         ))}
         {/* Gradient overlay — keeps text readable + brand feel */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(255,255,255,0.97) 0%, rgba(234,243,255,0.92) 45%, rgba(11,31,58,0.55) 100%)', zIndex: 1 }} />
+        <div className="hero-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(255,255,255,0.97) 0%, rgba(234,243,255,0.92) 45%, rgba(11,31,58,0.55) 100%)', zIndex: 1 }} />
         {/* Slide dots bottom-left */}
         <div style={{ position: 'absolute', bottom: 20, left: 'max(24px,4vw)', display: 'flex', gap: 6, zIndex: 10 }}>
           {CAROUSEL_SLIDES.map((s, i) => (
@@ -281,7 +319,7 @@ export default function Site() {
               style={{ width: i === heroSlide ? 22 : 8, height: 8, borderRadius: 99, border: 'none', background: i === heroSlide ? C.blue : `${C.blue}50`, cursor: 'pointer', padding: 0, transition: 'all 0.3s' }} />
           ))}
         </div>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center', position: 'relative', zIndex: 2 }}>
+        <div className="grid-2" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center', position: 'relative', zIndex: 2 }}>
           <div>
             <div style={{ marginBottom: 20 }}><Tag label="Plataforma escolar completa" /></div>
             <h1 style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 'clamp(36px,4vw,58px)', color: C.dark, margin: '0 0 20px', lineHeight: 1.1 }}>
@@ -295,7 +333,7 @@ export default function Site() {
               <Btn label="Falar com especialista" />
             </div>
             {/* Stats row */}
-            <div style={{ display: 'flex', gap: 32, marginTop: 44, paddingTop: 32, borderTop: '1px solid #e8f0fe' }}>
+            <div className="hero-stats" style={{ display: 'flex', gap: 32, marginTop: 44, paddingTop: 32, borderTop: '1px solid #e8f0fe' }}>
               {[['500+','Escolas'],['120k+','Alunos'],['4.9★','App Store']].map(([v,l]) => (
                 <div key={l}>
                   <p style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 24, color: C.dark, margin: 0 }}>{v}</p>
@@ -305,7 +343,7 @@ export default function Site() {
             </div>
           </div>
           {/* Dashboard mockup */}
-          <div style={{ position: 'relative' }}>
+          <div className="hero-mockup" style={{ position: 'relative' }}>
             <DashboardMockup />
             {/* Floating badges */}
             {[
@@ -313,8 +351,8 @@ export default function Site() {
               { label: '🏫 Diretor', top: '-6%', right: '10%' },
               { label: '👨‍👩‍👧 Família', bottom: '10%', left: '-16%' },
               { label: '🤖 Edu IA', bottom: '4%', right: '-8%' },
-            ].map(({ label, ...pos }) => (
-              <div key={label} style={{ position: 'absolute', ...pos, background: 'white', borderRadius: 12, padding: '8px 14px', boxShadow: '0 6px 24px rgba(22,119,255,0.14)', fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, color: C.dark, whiteSpace: 'nowrap', border: `1px solid ${C.lightBlue}` }}>
+            ].map(({ label, ...pos }, i) => (
+              <div key={label} className={`hero-badge hero-badge-${i + 1}`} style={{ position: 'absolute', ...pos, background: 'white', borderRadius: 12, padding: '8px 14px', boxShadow: '0 6px 24px rgba(22,119,255,0.14)', fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, color: C.dark, whiteSpace: 'nowrap', border: `1px solid ${C.lightBlue}` }}>
                 {label}
               </div>
             ))}
@@ -338,7 +376,7 @@ export default function Site() {
           <SectionTitle center tag="Ecossistema" title="Uma plataforma. Toda a comunidade escolar <span style='color:#1677FF'>conectada.</span>"
             sub="O Edukando reúne em um único ecossistema as principais ferramentas utilizadas diariamente pela escola, reduzindo a complexidade operacional e aproximando gestão, professores, famílias e alunos." />
           {/* Connection diagram */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div className="pos-diagram" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
               {['Escola','Direção','Professores','Alunos','Famílias'].map((n, i) => (
                 <div key={n} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
@@ -347,7 +385,7 @@ export default function Site() {
                 </div>
               ))}
             </div>
-            <div style={{ width: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div className="pos-arrow" style={{ width: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={`${C.blue}60`} strokeWidth="1.5"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
             <div style={{ background: `linear-gradient(135deg, ${C.dark}, ${C.blue})`, borderRadius: 24, padding: '32px 36px', textAlign: 'center', boxShadow: '0 16px 48px rgba(22,119,255,0.28)' }}>
@@ -365,9 +403,9 @@ export default function Site() {
             sub="Do diretor ao aluno, cada pessoa tem exatamente o que precisa para o seu dia a dia." />
 
           {/* Tab selector */}
-          <div style={{ display: 'flex', gap: 4, background: 'white', borderRadius: 16, padding: 6, maxWidth: 520, margin: '0 auto 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
+          <div className="aud-tabs" style={{ display: 'flex', gap: 4, background: 'white', borderRadius: 16, padding: 6, maxWidth: 520, margin: '0 auto 52px', boxShadow: '0 2px 16px rgba(0,0,0,0.06)' }}>
             {audienceTabs.map((t, i) => (
-              <button key={t.label} onClick={() => setActiveTab(i)}
+              <button key={t.label} className="aud-tab" onClick={() => setActiveTab(i)}
                 style={{ flex: 1, padding: '10px 8px', borderRadius: 11, border: 'none', cursor: 'pointer', fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, transition: 'all 0.22s',
                   background: activeTab === i ? t.color : 'transparent',
                   color: activeTab === i ? 'white' : C.textSec,
@@ -379,7 +417,7 @@ export default function Site() {
           </div>
 
           {/* Active card — full width split */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, background: 'white', borderRadius: 28, overflow: 'hidden', boxShadow: '0 12px 60px rgba(22,119,255,0.1)', border: '1px solid #edf0f7' }}>
+          <div className="grid-2 aud-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, background: 'white', borderRadius: 28, overflow: 'hidden', boxShadow: '0 12px 60px rgba(22,119,255,0.1)', border: '1px solid #edf0f7' }}>
             {/* Left — content */}
             <div style={{ padding: 'clamp(32px,4vw,56px)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{ width: 60, height: 60, borderRadius: 18, background: audienceTabs[activeTab].bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, marginBottom: 24 }}>
@@ -406,7 +444,7 @@ export default function Site() {
               </button>
             </div>
             {/* Right — visual */}
-            <div style={{ background: audienceTabs[activeTab].bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative', overflow: 'hidden', minHeight: 400 }}>
+            <div className="aud-visual" style={{ background: audienceTabs[activeTab].bg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 40, position: 'relative', overflow: 'hidden', minHeight: 400 }}>
               {/* Decorative rings */}
               <div style={{ position: 'absolute', top: -60, right: -60, width: 280, height: 280, borderRadius: '50%', border: `2px solid ${audienceTabs[activeTab].color}20` }} />
               <div style={{ position: 'absolute', bottom: -80, left: -40, width: 220, height: 220, borderRadius: '50%', border: `2px solid ${audienceTabs[activeTab].color}15` }} />
@@ -442,7 +480,7 @@ export default function Site() {
       {/* ── EDU AI SECTION ────────────────────────────────────────────────────── */}
       <section style={{ padding: 'clamp(60px,8vw,100px) max(24px,4vw)', background: C.dark, position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -100, right: -100, width: 400, height: 400, borderRadius: '50%', background: `radial-gradient(circle, ${C.blue}30 0%, transparent 70%)` }} />
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+        <div className="grid-2" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
           <div>
             <div style={{ marginBottom: 16 }}><Tag label="Inteligência Artificial" color="#818cf8" /></div>
             <h2 style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 'clamp(28px,3vw,44px)', color: 'white', margin: '0 0 16px', lineHeight: 1.15 }}>Conheça o <span style={{ color: C.blue }}>Edu.</span></h2>
@@ -486,7 +524,7 @@ export default function Site() {
 
       {/* ── FINANCIAL SECTION ────────────────────────────────────────────────── */}
       <section style={{ padding: 'clamp(60px,8vw,100px) max(24px,4vw)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+        <div className="grid-2" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
           {/* Financial dashboard mockup */}
           <div style={{ background: C.gray, borderRadius: 24, padding: 24 }}>
             <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, color: C.textSec, margin: '0 0 16px', textTransform: 'uppercase', letterSpacing: 0.8 }}>Painel Financeiro</p>
@@ -494,7 +532,7 @@ export default function Site() {
               {[['Receita mensal','R$ 82.400','#16a34a'],['Inadimplência','R$ 3.600','#dc2626'],['Pendentes','12','#f59e0b'],['NF emitidas','47','#2a68b4']].map(([l,v,c]) => (
                 <div key={l as string} style={{ background: 'white', borderRadius: 14, padding: '14px 16px', boxShadow: '0 1px 8px rgba(0,0,0,0.04)' }}>
                   <p style={{ fontFamily: 'Inter', fontSize: 11, color: C.textSec, margin: '0 0 4px' }}>{l}</p>
-                  <p style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 22, color: c as string, margin: 0 }}>{v}</p>
+                  <p className="fin-value" style={{ fontFamily: 'Outfit', fontWeight: 800, fontSize: 22, color: c as string, margin: 0 }}>{v}</p>
                 </div>
               ))}
             </div>
@@ -527,7 +565,7 @@ export default function Site() {
 
       {/* ── AGENDA / TIMELINE ─────────────────────────────────────────────────── */}
       <section style={{ padding: 'clamp(60px,8vw,100px) max(24px,4vw)', background: C.lightBlue }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+        <div className="grid-2" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
           <div>
             <SectionTitle tag="Agenda & Rotina" title="Da entrada à saída, <span style='color:#1677FF'>tudo acompanhado.</span>" sub="Informação registrada no momento certo. Família informada com mais clareza." />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4, position: 'relative', paddingLeft: 20 }}>
@@ -578,10 +616,10 @@ export default function Site() {
           </div>
 
           {/* Main layout: features left | phone center | thumbnails right */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 48, alignItems: 'center' }}>
+          <div className="app-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: 48, alignItems: 'center' }}>
 
             {/* Left — interactive feature list */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="app-list" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
                 { icon: '🏠', label: 'Home', desc: 'Resumo completo da vida escolar do seu filho.', screen: appScreen1 },
                 { icon: '📅', label: 'Agenda', desc: 'Aulas, eventos e atividades organizados por dia.', screen: appScreen2 },
@@ -613,7 +651,7 @@ export default function Site() {
             </div>
 
             {/* Center — phone with live screenshot */}
-            <div style={{ flexShrink: 0, position: 'relative' }}>
+            <div className="app-phone" style={{ flexShrink: 0, position: 'relative' }}>
               {/* Glow behind phone */}
               <div style={{ position: 'absolute', inset: -24, borderRadius: '50%', background: `radial-gradient(circle, ${C.blue}35 0%, transparent 70%)`, filter: 'blur(24px)', pointerEvents: 'none' }} />
               <div style={{ position: 'relative', background: C.dark, borderRadius: 48, padding: 10, boxShadow: '0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.12)', width: 260 }}>
@@ -644,14 +682,14 @@ export default function Site() {
             </div>
 
             {/* Right — thumbnail strip */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
+            <div className="app-thumbs" style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-start' }}>
               {[appScreen1, appScreen2, appScreen3, appScreen4, appScreen5, appScreen6].map((src, i) => {
                 const isActive = activeAppScreen === i;
                 return (
                   <button key={i} onClick={() => setActiveAppScreen(i)}
                     style={{ display: 'flex', gap: 12, alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0, transition: 'all 0.2s', opacity: isActive ? 1 : 0.45 }}>
-                    <div style={{ width: isActive ? 3 : 2, height: 52, borderRadius: 99, background: isActive ? C.blue : 'rgba(255,255,255,0.2)', transition: 'all 0.2s', flexShrink: 0 }} />
-                    <div style={{ width: 52, height: 52, borderRadius: 14, overflow: 'hidden', border: isActive ? `2px solid ${C.blue}` : '2px solid rgba(255,255,255,0.1)', transition: 'all 0.2s', flexShrink: 0, boxShadow: isActive ? `0 4px 16px ${C.blue}50` : 'none' }}>
+                    <div className="app-thumb-bar" style={{ width: isActive ? 3 : 2, height: 52, borderRadius: 99, background: isActive ? C.blue : 'rgba(255,255,255,0.2)', transition: 'all 0.2s', flexShrink: 0 }} />
+                    <div className="app-thumb-img" style={{ width: 52, height: 52, borderRadius: 14, overflow: 'hidden', border: isActive ? `2px solid ${C.blue}` : '2px solid rgba(255,255,255,0.1)', transition: 'all 0.2s', flexShrink: 0, boxShadow: isActive ? `0 4px 16px ${C.blue}50` : 'none' }}>
                       <img src={src} alt={`Thumb ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
                     </div>
                   </button>
@@ -684,7 +722,7 @@ export default function Site() {
             sub="Todos os módulos conectados em torno de um único núcleo inteligente." />
 
           {/* Orbit diagram */}
-          <div style={{ position: 'relative', width: 560, height: 560, margin: '0 auto' }}>
+          <div className="eco-orbit" style={{ position: 'relative', width: 560, height: 560, margin: '0 auto' }}>
 
             {/* Outer orbit ring (rotating) */}
             <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `1px dashed rgba(22,119,255,0.18)`, animation: 'orbit-slow 40s linear infinite' }} />
@@ -715,18 +753,7 @@ export default function Site() {
             </div>
 
             {/* Module nodes orbiting */}
-            {[
-              { label: 'Gestão',       icon: '🏫' },
-              { label: 'Financeiro',   icon: '💳' },
-              { label: 'CRM',          icon: '🤝' },
-              { label: 'Agenda',       icon: '📅' },
-              { label: 'Comunicação',  icon: '💬' },
-              { label: 'IA Edu',       icon: '🤖' },
-              { label: 'Frequência',   icon: '✅' },
-              { label: 'Acadêmico',    icon: '📊' },
-              { label: 'APP',          icon: '📱' },
-              { label: 'Relacionamento', icon: '👥' },
-            ].map((mod, i) => {
+            {ECO_MODULES.map((mod, i) => {
               const total = 10;
               const angle = (i / total) * Math.PI * 2 - Math.PI / 2;
               const r = 220;
@@ -748,8 +775,24 @@ export default function Site() {
             })}
           </div>
 
+          <div className="eco-mobile" style={{ display: 'none', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
+            <div style={{ position: 'relative', width: 120, height: 120 }}>
+              <div style={{ position: 'absolute', top: '50%', left: '50%', width: 120, height: 120, borderRadius: '50%', background: `linear-gradient(135deg, #0d2a5e, ${C.blue})`, display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'eco-pulse 3s ease-in-out infinite', border: '2px solid rgba(255,255,255,0.15)' }}>
+                <img src={logoEco} alt="Edukando" style={{ width: 104, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, width: '100%', maxWidth: 420 }}>
+              {ECO_MODULES.map((mod, i) => (
+                <div key={mod.label} style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 14, padding: '10px 12px', animation: `eco-node-in 0.5s ease ${i * 0.07}s both`, minWidth: 0 }}>
+                  <span style={{ fontSize: 16 }}>{mod.icon}</span>
+                  <span style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, color: 'white', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{mod.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Bottom stats */}
-          <div style={{ display: 'flex', gap: 24, justifyContent: 'center', marginTop: 56, flexWrap: 'wrap' }}>
+          <div className="eco-stats" style={{ display: 'flex', gap: 24, justifyContent: 'center', marginTop: 56, flexWrap: 'wrap' }}>
             {[['10+','Módulos integrados'],['1 plataforma','Tudo em um só lugar'],['100%','Conectado']].map(([v, l]) => (
               <div key={l} style={{ textAlign: 'center', padding: '20px 32px', background: 'rgba(255,255,255,0.04)', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
                 <p style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 28, color: C.blue, margin: 0 }}>{v}</p>
@@ -762,7 +805,7 @@ export default function Site() {
 
       {/* ── WHITE LABEL ───────────────────────────────────────────────────────── */}
       <section style={{ padding: 'clamp(60px,8vw,100px) max(24px,4vw)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+        <div className="grid-2" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
           <div>
             <SectionTitle tag="White Label" title="A tecnologia do Edukando com a <span style='color:#1677FF'>identidade da sua escola.</span>"
               sub="Uma experiência digital que parece feita para a sua escola. Porque é." />
@@ -794,7 +837,7 @@ export default function Site() {
       <section style={{ padding: 'clamp(60px,8vw,100px) max(24px,4vw)', background: C.gray }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <SectionTitle center tag="Benefícios" title="Por que escolher o <span style='color:#1677FF'>Edukando?</span>" />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
+          <div className="benefits-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 20 }}>
             {[['01','Mais organização','Processos centralizados e sem papel.'],['02','Mais comunicação','Escola e família sempre conectadas.'],['03','Mais eficiência','Automação que libera tempo.'],['04','Mais transparência','Informação clara para todos os perfis.'],['05','Mais inteligência','Dados e IA a favor da escola.'],['06','Mais conexão','Uma comunidade escolar unida.']].map(([n,t,d]) => (
               <div key={n as string} style={{ background: 'white', borderRadius: 20, padding: '24px 20px', boxShadow: '0 2px 12px rgba(22,119,255,0.06)', border: '1px solid #edf2fe' }}>
                 <span style={{ fontFamily: 'Outfit', fontWeight: 900, fontSize: 32, color: `${C.blue}20` }}>{n}</span>
@@ -835,7 +878,7 @@ export default function Site() {
       {/* ── FOOTER ───────────────────────────────────────────────────────────── */}
       <footer style={{ background: C.dark, padding: 'clamp(48px,6vw,72px) max(24px,4vw) 32px' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 48 }}>
             <div>
               <img src={logo} alt="Edukando" style={{ height: 36, filter: 'brightness(0) invert(1)', marginBottom: 16, objectFit: 'contain' }} />
               <p style={{ fontFamily: 'Inter', fontSize: 14, color: 'rgba(255,255,255,0.55)', margin: '0 0 20px', lineHeight: 1.7, maxWidth: 260 }}>Tecnologia que conecta toda a escola.</p>
@@ -871,11 +914,11 @@ export default function Site() {
       </footer>
 
       {/* ── EDU CHAT WIDGET ──────────────────────────────────────────────────── */}
-      <div style={{ position: 'fixed', bottom: 28, right: 28, zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
+      <div className="chat-widget" style={{ position: 'fixed', bottom: 28, right: 28, zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 12 }}>
 
         {/* Chat panel */}
         {chatOpen && (
-          <div style={{ width: 340, background: 'white', borderRadius: 24, boxShadow: '0 24px 80px rgba(11,31,58,0.22), 0 4px 24px rgba(22,119,255,0.12)', border: '1px solid #e8f0fe', overflow: 'hidden', animation: 'eco-node-in 0.25s ease both' }}>
+          <div className="chat-panel" style={{ width: 340, background: 'white', borderRadius: 24, boxShadow: '0 24px 80px rgba(11,31,58,0.22), 0 4px 24px rgba(22,119,255,0.12)', border: '1px solid #e8f0fe', overflow: 'hidden', animation: 'eco-node-in 0.25s ease both' }}>
             {/* Header */}
             <div style={{ background: `linear-gradient(135deg, #0d2a5e, ${C.blue})`, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
               <div style={{ width: 44, height: 44, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.3)', flexShrink: 0 }}>
@@ -894,7 +937,7 @@ export default function Site() {
             </div>
 
             {/* Messages */}
-            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 280, overflowY: 'auto', background: '#f8faff' }}>
+            <div className="chat-messages" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 280, overflowY: 'auto', background: '#f8faff' }}>
               {chatHistory.map((msg, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: msg.from === 'user' ? 'flex-end' : 'flex-start', gap: 8, alignItems: 'flex-end' }}>
                   {msg.from === 'edu' && (
@@ -922,7 +965,7 @@ export default function Site() {
 
             {/* Input */}
             <div style={{ padding: '10px 14px 14px', display: 'flex', gap: 8, borderTop: '1px solid #edf0f7' }}>
-              <input value={chatMsg} onChange={e => setChatMsg(e.target.value)}
+              <input className="chat-input" value={chatMsg} onChange={e => setChatMsg(e.target.value)}
                 onKeyDown={e => {
                   if (e.key === 'Enter' && chatMsg.trim()) {
                     setChatHistory(h => [...h, { from: 'user', text: chatMsg }, { from: 'edu', text: 'Entendido! Vou passar sua mensagem para nossa equipe. Em breve alguém entrará em contato. 👍' }]);
@@ -944,14 +987,14 @@ export default function Site() {
 
         {/* Bubble teaser (visible when closed) */}
         {!chatOpen && (
-          <div style={{ background: 'white', borderRadius: '16px 16px 4px 16px', padding: '10px 16px', boxShadow: '0 8px 32px rgba(11,31,58,0.14)', border: `1.5px solid ${C.lightBlue}`, animation: 'eco-float 3s ease-in-out infinite', maxWidth: 200 }}>
+          <div className="chat-teaser" style={{ background: 'white', borderRadius: '16px 16px 4px 16px', padding: '10px 16px', boxShadow: '0 8px 32px rgba(11,31,58,0.14)', border: `1.5px solid ${C.lightBlue}`, animation: 'eco-float 3s ease-in-out infinite', maxWidth: 200 }}>
             <p style={{ fontFamily: 'Outfit', fontWeight: 700, fontSize: 13, color: C.dark, margin: 0 }}>Posso te ajudar? 👋</p>
             <p style={{ fontFamily: 'Inter', fontSize: 11, color: C.textSec, margin: '2px 0 0' }}>Fala com o Edu agora!</p>
           </div>
         )}
 
         {/* FAB button */}
-        <button onClick={() => setChatOpen(o => !o)}
+        <button className="chat-fab" onClick={() => setChatOpen(o => !o)}
           style={{ width: 64, height: 64, borderRadius: '50%', border: 'none', background: `linear-gradient(135deg, #0d2a5e, ${C.blue})`, cursor: 'pointer', padding: 0, overflow: 'hidden', boxShadow: '0 8px 32px rgba(22,119,255,0.45), 0 2px 8px rgba(0,0,0,0.15)', transition: 'transform 0.2s, box-shadow 0.2s', position: 'relative' }}
           onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.08)'; }}
           onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)'; }}>

@@ -19,6 +19,10 @@ body {
   padding: 0;
 }
 
+html {
+  scroll-padding-top: 80px;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: #ffffff;
@@ -95,4 +99,143 @@ h6 {
     transform: scale(1.4);
     opacity: 0.7;
   }
+}
+
+/* ── Responsive (landing uses inline styles, so overrides need !important) ── */
+
+@media (min-width: 1081px) {
+  .site-mobile-menu { display: none !important; }
+}
+
+@media (max-width: 1080px) {
+  .site-nav,
+  .site-header-actions { display: none !important; }
+  .site-menu-btn { display: flex !important; }
+}
+
+@media (max-width: 900px) {
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 44px !important;
+  }
+  .aud-card { gap: 0 !important; }
+  .aud-visual { min-height: 320px !important; }
+
+  .section-title { margin-bottom: 36px !important; }
+
+  .app-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    justify-items: center;
+  }
+  .app-phone { order: 1; }
+  .app-thumbs {
+    order: 2;
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center !important;
+  }
+  .app-thumb-bar { display: none !important; }
+  .app-list {
+    order: 3;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+  .footer-grid > :first-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 640px) {
+  .site-logo { height: 38px !important; }
+
+  .section-sub { font-size: 15px !important; }
+
+  .hero-overlay {
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(234,243,255,0.93) 60%, rgba(234,243,255,0.85) 100%) !important;
+  }
+  .hero-stats {
+    gap: 24px !important;
+    flex-wrap: wrap;
+    margin-top: 32px !important;
+    padding-top: 24px !important;
+  }
+  .hero-mockup { margin: 18px 0; }
+  .hero-badge {
+    font-size: 11px !important;
+    padding: 6px 10px !important;
+  }
+  .hero-badge-1 { top: -16px !important; left: 6px !important; }
+  .hero-badge-2 { top: -16px !important; right: 6px !important; }
+  .hero-badge-3 { bottom: -16px !important; left: 6px !important; }
+  .hero-badge-4 { bottom: -16px !important; right: 6px !important; }
+
+  .dash-body { height: auto !important; }
+  .dash-kpis { flex-wrap: wrap; }
+  .dash-kpis > div { flex: 1 1 calc(50% - 5px) !important; }
+  .dash-row { flex-direction: column; }
+  .dash-chart { flex: none !important; }
+
+  .pos-diagram {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pos-arrow {
+    width: auto !important;
+    transform: rotate(90deg);
+  }
+
+  .aud-tab {
+    font-size: 11px !important;
+    padding: 8px 2px !important;
+  }
+  .aud-visual {
+    min-height: 280px !important;
+    padding: 32px 20px !important;
+  }
+
+  .fin-value { font-size: 18px !important; }
+
+  .app-thumbs {
+    flex-wrap: nowrap;
+    gap: 6px !important;
+  }
+  .app-thumb-img {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+  }
+
+  .eco-orbit { display: none !important; }
+  .eco-mobile { display: flex !important; }
+  .eco-stats {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px !important;
+    margin-top: 40px !important;
+  }
+  .eco-stats > div { padding: 16px 20px !important; }
+
+  .benefits-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .benefits-grid > div { padding: 20px 16px !important; }
+
+  .chat-widget {
+    right: 16px !important;
+    bottom: 16px !important;
+  }
+  .chat-panel { width: calc(100vw - 32px) !important; }
+  .chat-messages { max-height: min(280px, 38vh) !important; }
+  .chat-input { font-size: 16px !important; }
+  .chat-fab {
+    width: 56px !important;
+    height: 56px !important;
+  }
+  .chat-teaser { max-width: 170px !important; }
 }
